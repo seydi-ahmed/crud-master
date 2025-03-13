@@ -1,0 +1,14 @@
+{
+    "name": "inventory-app",
+    "version": "1.0.0",
+    "description": "Inventory API for movie streaming platform",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "dependencies": {
+      "express": "^4.17.1",
+      "sequelize": "^6.6.5",
+      "pg": "^8.7.1"
+    }
+  }
