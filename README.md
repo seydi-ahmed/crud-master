@@ -55,3 +55,37 @@
     - vagrant status : Affiche l'état des VMs.
     - vagrant ssh <vm-name> : Se connecte à une VM.
 
+## Structure du projet
+```
+.
+├── README.md
+├── config.yaml
+├── .env
+├── scripts
+│   └── billing-setup.sh
+│   ├── gateway-setup.sh
+│   └── inventory-setup.sh
+├── srcs
+│   ├── api-gateway
+│   │   ├── package.json
+│   │   ├── proxy.js
+│   │   ├── routes.js
+│   │   └── server.js
+│   ├── billing-app
+│   │   ├── app
+│   │   │   ├── config        // This is a directory with some .js files
+│   │   │   ├── controllers   // This is a directory with some .js files
+│   │   │   └── models        // This is a directory with some .js files
+│   │   ├── package.json
+│   │   └── server.js
+│   └── inventory-app
+│       ├── app
+│       │   ├── config        // This is a directory with some .js files
+│       │   ├── controllers   // This is a directory with some .js files
+│       │   ├── models        // This is a directory with some .js files
+│       │   └── routes        // This is a directory with some .js files
+│       ├── package.json
+│       └── server.js
+└── Vagrantfile
+```
+
