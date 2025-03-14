@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.BILLING_PORT || 8081;
 
 // Database connection
-const sequelize = new Sequelize('orders', 'postgres', 'password', {
+const sequelize = new Sequelize('orders', 'postgres', 'diouf', {
   host: 'localhost',
   dialect: 'postgres',
 });

@@ -12,7 +12,7 @@ apt-get install -y postgresql postgresql-contrib
 
 # Configure PostgreSQL
 sudo -u postgres psql -c "CREATE DATABASE movies;"
-sudo -u postgres psql -c "CREATE USER postgres WITH PASSWORD 'password';"
+sudo -u postgres psql -c "CREATE USER postgres WITH PASSWORD 'diouf';"
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE movies TO postgres;"
 
 # Install Inventory API

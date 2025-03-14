@@ -1,14 +1,14 @@
 const express = require('express');
-const inventoryProxy = require('./proxy');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
 const router = express.Router();
 
-// Route for Inventory API
-router.use('/api/movies', inventoryProxy);
+router.use('/api/movies', createProxyMiddleware({
+  target: 'http://192.168.56.20:8080',
+  changeOrigin: true,
+  pathRewrite: { '^/api/movies': '/api/movies' }, 
+  logLevel: 'debug' // Ajoute cette ligne pour voir les logs
+}));
 
-// Route for Billing API (via RabbitMQ)
-router.post('/api/billing', (req, res) => {
-  // Logic to send message to RabbitMQ
-  res.status(200).json({ message: 'Order received' });
-});
 
 module.exports = router;
