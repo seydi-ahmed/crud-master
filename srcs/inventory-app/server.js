@@ -87,3 +87,12 @@ sequelize.sync().then(() => {
     console.log(`🎬 Inventory API running on port ${PORT}`);
   });
 });
+
+app.use((req, res, next) => {
+  console.log(`📥 Inventory API a reçu une requête ${req.method} ${req.url}`);
+  console.log(`📦 Body reçu:`, req.body);
+  next();
+});
+
+app.use(express.json({ limit: '10mb' })); // Augmente la limite de taille des requêtes JSON
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
