@@ -1,3 +1,5 @@
+// crud-master/srcs/api-gateway/proxy.js
+
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const inventoryProxy = createProxyMiddleware({

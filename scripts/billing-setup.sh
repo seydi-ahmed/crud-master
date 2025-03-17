@@ -3,9 +3,10 @@
 # Update packages
 apt-get update
 
-# Install Node.js
+# Install Node.js & PM2
 curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 apt-get install -y nodejs
+npm install -g pm2  # Installer PM2 globalement
 
 # Install PostgreSQL
 apt-get install -y postgresql postgresql-contrib
@@ -24,5 +25,9 @@ systemctl start rabbitmq-server
 cd /vagrant/srcs/billing-app
 npm install
 
-# Start the Billing API
-npm start
+# Start the Billing API with PM2
+pm2 start server.js --name billing-app
+
+# Save PM2 processes
+pm2 save
+pm2 startup

@@ -1,3 +1,5 @@
+// crud-master/srcs/api-gateway/routes.js
+
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
@@ -14,6 +16,11 @@ router.use('/api/movies', createProxyMiddleware({
   changeOrigin: true,
   pathRewrite: { '^/api/movies': '/api/movies' }, 
   logLevel: 'debug' // Ajoute cette ligne pour voir les logs
+}));
+
+router.use('/orders', createProxyMiddleware({
+  target: 'http://192.168.56.30:8081',
+  changeOrigin: true,
 }));
 
 module.exports = router;

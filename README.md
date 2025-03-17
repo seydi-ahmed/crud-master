@@ -1,13 +1,48 @@
 # CRUD-MASTER
 
 ## Installation des outils nécessaires
-- ✅ VirtualBox ou VMware
+- ✅ VirtualBox
 - ✅ Vagrant
 - ✅ Node.js (avec Express, Sequelize et autres packages nécessaires)
 - ✅ PostgreSQL
 - ✅ RabbitMQ
 - ✅ Postman
 - ✅ PM2 (pour la gestion des processus Node.js)
+
+
+## Structure du projet
+```
+.
+├── README.md
+├── config.yaml
+├── .env
+├── scripts
+│   └── billing-setup.sh
+│   ├── gateway-setup.sh
+│   └── inventory-setup.sh
+├── srcs
+│   ├── api-gateway
+│   │   ├── package.json
+│   │   ├── proxy.js
+│   │   ├── routes.js
+│   │   └── server.js
+│   ├── billing-app
+│   │   ├── app
+│   │   │   ├── config        // This is a directory with some .js files
+│   │   │   ├── controllers   // This is a directory with some .js files
+│   │   │   └── models        // This is a directory with some .js files
+│   │   ├── package.json
+│   │   └── server.js
+│   └── inventory-app
+│       ├── app
+│       │   ├── config        // This is a directory with some .js files
+│       │   ├── controllers   // This is a directory with some .js files
+│       │   ├── models        // This is a directory with some .js files
+│       │   └── routes        // This is a directory with some .js files
+│       ├── package.json
+│       └── server.js
+└── Vagrantfile
+```
 
 ## Role de chaque fichier/dossier:
 1) .env
@@ -55,37 +90,14 @@
     - vagrant status : Affiche l'état des VMs.
     - vagrant ssh <vm-name> : Se connecte à une VM.
 
-## Structure du projet
-```
-.
-├── README.md
-├── config.yaml
-├── .env
-├── scripts
-│   └── billing-setup.sh
-│   ├── gateway-setup.sh
-│   └── inventory-setup.sh
-├── srcs
-│   ├── api-gateway
-│   │   ├── package.json
-│   │   ├── proxy.js
-│   │   ├── routes.js
-│   │   └── server.js
-│   ├── billing-app
-│   │   ├── app
-│   │   │   ├── config        // This is a directory with some .js files
-│   │   │   ├── controllers   // This is a directory with some .js files
-│   │   │   └── models        // This is a directory with some .js files
-│   │   ├── package.json
-│   │   └── server.js
-│   └── inventory-app
-│       ├── app
-│       │   ├── config        // This is a directory with some .js files
-│       │   ├── controllers   // This is a directory with some .js files
-│       │   ├── models        // This is a directory with some .js files
-│       │   └── routes        // This is a directory with some .js files
-│       ├── package.json
-│       └── server.js
-└── Vagrantfile
-```
 
+## Reste à faire
+- cacher les credentials dans les fichiers scripts/*, .env
+- renforcer les infos du fichier .env
+- exporter le fchier JSON de postman avec toutes les requêtes
+    - GATEWAY
+        - ✅ GET GATEWAY/MOVIES redirige vers l'Inventory API pour récupérer la liste des films
+        - ✅ GET GATEWAY/MOVIES/ID redirige vers l'Inventory API pour récupérer un film spécifique
+        - Get GATEWAY doit souhaiter un message de bienvenue
+        - Post GATEWAY/ORDERS redirige vers la Billing API pour créer une nouvelle commande
+        - GET GATEWAY/ORDERS/ID redirige vers la Billing API pour récupérer une commande spécifique.

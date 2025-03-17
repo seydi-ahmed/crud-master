@@ -1,3 +1,5 @@
+// crud-master/srcs/inventory-app/server.js
+
 const express = require('express');
 const { Sequelize, DataTypes } = require('sequelize');
 
