@@ -7,4 +7,9 @@ const inventoryProxy = createProxyMiddleware({
   changeOrigin: true,
 });
 
-module.exports = inventoryProxy;
+const billingProxy = createProxyMiddleware({
+  target: 'http://192.168.56.30:8081', // Inventory API URL
+  changeOrigin: true,
+});
+
+module.exports = {inventoryProxy, billingProxy};
