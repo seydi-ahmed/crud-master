@@ -83,6 +83,16 @@ app.delete('/api/movies/:id', async (req, res) => {
   }
 });
 
+app.delete('/api/movies', async (req, res) => {
+  try {
+    await Movie.destroy({ where: {}, truncate: true });
+    res.json({ message: 'Tous les films ont été supprimés avec succès' });
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+
 // Vérification de la connexion à la BDD avant de démarrer le serveur
 sequelize.sync().then(() => {
   app.listen(PORT, '0.0.0.0', () => {

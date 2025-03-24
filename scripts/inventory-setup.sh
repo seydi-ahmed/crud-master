@@ -26,6 +26,9 @@ npm install -g pm2
 # Start the Inventory API with PM2
 pm2 start server.js --name inventory-app
 
+# Configurer PM2 pour démarrer au boot
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u vagrant --hp /home/vagrant
+
 # Save PM2 processes
 pm2 save
 pm2 startup

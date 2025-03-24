@@ -23,6 +23,10 @@ apt-get install -y rabbitmq-server
 systemctl enable rabbitmq-server
 systemctl start rabbitmq-server
 
+# Démarrer RabbitMQ
+sudo systemctl enable rabbitmq-server
+sudo systemctl start rabbitmq-server
+
 # Install Billing API
 cd /vagrant/srcs/billing-app
 npm install
@@ -30,6 +34,9 @@ npm install -g pm2
 
 # Start the Billing API with PM2
 pm2 start server.js --name billing-app
+
+# Configurer PM2 pour démarrer au boot
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u vagrant --hp /home/vagrant
 
 # Save PM2 processes
 pm2 save
