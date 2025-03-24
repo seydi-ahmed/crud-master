@@ -113,12 +113,6 @@
   - vagrant status : Affiche l'état des VMs.
   - vagrant ssh <vm-name> : Se connecte à une VM.
 
-## Reste à faire
-
-- cacher les credentials dans les fichiers scripts/\*, .env
-- renforcer les infos du fichier .env
-- exporter le fchier JSON de postman avec toutes les requêtes
-  - GET GATEWAY/BILLING/ID redirige vers la Billing API pour récupérer une commande spécifique.
 
 ## Utilisation
 
@@ -159,4 +153,11 @@ pm2 startup
 - sudo rabbitmqctl list_queues
 
 4) démarrer la base de données pour voir si la liste est enregistrée
+
+## Reste à faire
+
+- cacher les credentials dans .env
+- renforcer les infos du fichier .env
+- exporter le fchier JSON de postman avec toutes les requêtes
+  - GET GATEWAY/BILLING/ID redirige vers la Billing API pour récupérer une commande spécifique.
 - psql -U postgres -d orders -c "SELECT * FROM orders;"

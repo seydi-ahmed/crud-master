@@ -6,6 +6,20 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 
+
+// À ajouter AVANT les routes
+app.use((req, res, next) => {
+  const originalSend = res.send;
+  const originalStatus = res.status;
+  
+  res.status = function(code) {
+    // Transforme 201/202 en 200 (tout le reste inchangé)
+    return originalStatus.call(this, [201, 202].includes(code) ? 200 : code);
+  };
+  
+  next();
+});
+
 // Proxy pour Inventory API (HTTP)
 app.use(
   "/api/movies",

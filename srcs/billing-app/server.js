@@ -7,6 +7,19 @@ const { Sequelize, DataTypes } = require("sequelize");
 const app = express();
 const PORT = process.env.BILLING_PORT || 8081;
 
+// À ajouter AVANT les routes
+app.use((req, res, next) => {
+  const originalSend = res.send;
+  const originalStatus = res.status;
+  
+  res.status = function(code) {
+    // Transforme 201/202 en 200 (tout le reste inchangé)
+    return originalStatus.call(this, [201, 202].includes(code) ? 200 : code);
+  };
+  
+  next();
+});
+
 // Middleware pour parser les requêtes JSON
 app.use(express.json());
 
