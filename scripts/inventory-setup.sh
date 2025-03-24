@@ -1,3 +1,5 @@
+# crud-master/scripts/inventory-setup.sh
+
 #!/bin/bash
 
 # Update packages
@@ -19,6 +21,7 @@ sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE movies TO postgres;"
 # Install Inventory API
 cd /vagrant/srcs/inventory-app
 npm install
+npm install -g pm2
 
 # Start the Inventory API with PM2
 pm2 start server.js --name inventory-app

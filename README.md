@@ -24,22 +24,28 @@
 ├── srcs
 │   ├── api-gateway
 │   │   ├── package.json
-│   │   ├── proxy.js
-│   │   ├── routes.js
-│   │   └── server.js
+│   │   ├── server.js
+│   │   ├── rabbitmq-proxy.js
 │   ├── billing-app
 │   │   ├── app
-│   │   │   ├── config        // This is a directory with some .js files
-│   │   │   ├── controllers   // This is a directory with some .js files
-│   │   │   └── models        // This is a directory with some .js files
+│   │   │   ├── config
+│   │   |   |   └── database.js
+│   │   │   ├── controllers
+│   │   |   |   └── orderController.js
+│   │   │   └── models
+│   │   |       └── orderRoute.js
 │   │   ├── package.json
 │   │   └── server.js
 │   └── inventory-app
 │       ├── app
-│       │   ├── config        // This is a directory with some .js files
-│       │   ├── controllers   // This is a directory with some .js files
-│       │   ├── models        // This is a directory with some .js files
-│       │   └── routes        // This is a directory with some .js files
+│       │   ├── config
+│       |   |   └── database.js
+│       │   ├── controllers
+│       |   |   └── movieController.js
+│       │   ├── models
+│       |   |   └── movieModel.js
+│       │   └── routes
+│       |   |   └── movieRoutes.js
 │       ├── package.json
 │       └── server.js
 └── Vagrantfile
@@ -132,3 +138,12 @@
         - vagrant ssh billing-vm
         - cd /vagrant/srcs/billing-app
         - node server.js
+
+
+## pm2
+1) pour démarrer billing(par exemple)
+- pm2 start server.js --name billing-app
+- pm2 save
+- pm2 startup
+2) stopper
+- pm2 stop billing-app

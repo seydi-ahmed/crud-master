@@ -1,3 +1,5 @@
+# crud-master/scripts/billing-setup.sh
+
 #!/bin/bash
 
 # Update packages
@@ -24,6 +26,7 @@ systemctl start rabbitmq-server
 # Install Billing API
 cd /vagrant/srcs/billing-app
 npm install
+npm install -g pm2
 
 # Start the Billing API with PM2
 pm2 start server.js --name billing-app

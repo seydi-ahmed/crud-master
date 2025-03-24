@@ -1,3 +1,5 @@
+# crud-master/scripts/gateway-setup.sh
+
 #!/bin/bash
 
 # Update packages
@@ -11,6 +13,7 @@ npm install -g pm2  # Installer PM2 globalement
 # Install API Gateway
 cd /vagrant/srcs/api-gateway
 npm install
+npm install -g pm2
 
 # Start the API Gateway with PM2
 pm2 start server.js --name api-gateway
