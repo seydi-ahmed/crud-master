@@ -1,63 +1,41 @@
 // crud-master/srcs/api-gateway/server.js
 
 const express = require("express");
+const amqp = require("amqplib"); // Ajoutez cette ligne
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 
-const RABBITMQ_HOST = "amqp://admin:admin@127.0.0.1:5672/";
-
+// Proxy pour Inventory API (HTTP)
 app.use(
   "/api/movies",
   createProxyMiddleware({
     target: "http://192.168.56.20:8080",
     changeOrigin: true,
-    pathRewrite: { "^/api/movies": "/api/movies" },
-    logLevel: "debug", // Ajoute des logs détaillés
-    onProxyReq: (proxyReq, req, res) => {
-      console.log("🛰 Envoi de la requête au backend:", req.method, req.url);
-    },
-    onProxyRes: (proxyRes, req, res) => {
-      console.log(
-        "📩 Réponse reçue du backend avec statut:",
-        proxyRes.statusCode
-      );
-    },
-    onError: (err, req, res) => {
-      console.error("❌ Proxy error:", err.message);
-      res
-        .status(502)
-        .json({ error: "Problème de communication avec le backend" });
-    },
+    pathRewrite: { "^/api/movies": "/api/movies" }
   })
 );
 
-// Proxy pour Billing API
-app.use(
-  "/api/billing",
-  createProxyMiddleware({
-    target: "http://192.168.56.30:8081", // Adresse IP et port de l'API Billing
-    changeOrigin: true,
-    pathRewrite: { "^/api/billing": "/api/billing" },
-    logLevel: "debug",
-    onProxyReq: (proxyReq, req, res) => {
-      console.log("Envoi de la requête à Billing API:", req.method, req.url);
-    },
-    onProxyRes: (proxyRes, req, res) => {
-      console.log(
-        "Réponse reçue de Billing API avec statut:",
-        proxyRes.statusCode
-      );
-    },
-    onError: (err, req, res) => {
-      console.error("❌ Proxy error Billing API:", err.message);
-      res
-        .status(502)
-        .json({ error: "Problème de communication avec Billing API" });
-    },
-  })
-);
+// Route RabbitMQ pour Billing
+app.post("/api/billing", express.json(), async (req, res) => {
+  try {
+    const conn = await amqp.connect("amqp://192.168.56.30:5672"); 
+    const channel = await conn.createChannel();
+    
+    await channel.assertQueue("billing_queue", { durable: false });
+    channel.sendToQueue("billing_queue", Buffer.from(JSON.stringify(req.body)));
 
-app.listen(3000, () => {
-  console.log("🚀 API Gateway running on port 3000");
+    console.log("📨 Message envoyé à RabbitMQ");
+    res.status(202).json({ status: "Message reçu par RabbitMQ" });
+
+    setTimeout(() => {
+      channel.close();
+      conn.close();
+    }, 500);
+  } catch (err) {
+    console.error("Erreur RabbitMQ:", err);
+    res.status(502).json({ error: "Service temporairement indisponible" });
+  }
 });
+
+app.listen(3000, () => console.log("🚀 Gateway sur port 3000"));

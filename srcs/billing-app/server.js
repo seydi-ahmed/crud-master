@@ -17,19 +17,27 @@ const sequelize = new Sequelize("orders", "postgres", "diouf", {
 });
 
 // Définition du modèle Order
-const Order = sequelize.define("Order", {
+// Corrigez la définition du modèle Order :
+const Order = sequelize.define('Order', {
   user_id: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: false
   },
   number_of_items: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: false
   },
   total_amount: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
+    type: DataTypes.DECIMAL(10,2),
+    allowNull: false
   },
+  created_at: {  // Ajoutez explicitement ce champ
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+  }
+}, {
+  timestamps: false,  // Désactive les champs createdAt/updatedAt automatiques
+  underscored: true   // Utilise les noms de colonnes snake_case
 });
 
 // Synchronisation du modèle avec la base de données
@@ -39,84 +47,49 @@ sequelize
   .catch((err) => console.error("Erreur de synchronisation DB:", err));
 
 // Connexion à RabbitMQ
-// async function connectRabbitMQ() {
-//   try {
-//     const connection = await amqp.connect("amqp://localhost");
-//     const channel = await connection.createChannel();
-//     const queue = "billing_queue";
+// Remplacez la fonction connectRabbitMQ par ceci :
+async function connectRabbitMQ() {
+  let retries = 5;
+  while (retries > 0) {
+    try {
+      const conn = await amqp.connect('amqp://localhost');
+      const channel = await conn.createChannel();
+      
+      await channel.assertQueue('billing_queue', { durable: false });
+      console.log('✅ Connecté à RabbitMQ');
 
-//     await channel.assertQueue(queue, { durable: false });
+      channel.consume('billing_queue', async (msg) => {
+        if (msg) {
+          try {
+            const order = JSON.parse(msg.content.toString());
+            console.log('📦 Message reçu:', order);
+            
+            // Crée l'ordre en base de données
+            await Order.create(order);
+            console.log('💾 Ordre sauvegardé en BDD');
+            
+            channel.ack(msg);
+          } catch (err) {
+            console.error('❌ Erreur traitement:', err);
+          }
+        }
+      });
 
-//     channel.consume(queue, async (msg) => {
-//       if (msg !== null) {
-//         const order = JSON.parse(msg.content.toString());
-//         await Order.create(order);
-//         channel.ack(msg);
-//       }
-//     });
+      // Gestion des erreurs de connexion
+      conn.on('error', (err) => {
+        console.error('🚨 Erreur de connexion RabbitMQ:', err);
+      });
 
-//     console.log("Connecté à RabbitMQ et en attente de messages...");
-//   } catch (error) {
-//     console.error("Erreur de connexion à RabbitMQ:", error);
-//   }
-// }
-
-// connectRabbitMQ();
-
-// Routes API
-
-// GET - Récupérer toutes les factures
-app.get("/api/billing", async (req, res) => {
-  try {
-    const orders = await Order.findAll();
-    res.json(orders);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Erreur lors de la récupération des factures" });
+      return;
+    } catch (err) {
+      retries--;
+      console.error(`Tentative ${5-retries}/5 - Erreur connexion RabbitMQ:`, err.message);
+      await new Promise(res => setTimeout(res, 5000));
+    }
   }
-});
-
-// Route GET - Récupérer une facture par ID
-app.get("/api/billing/:id", async (req, res) => {
-  try {
-    const order = await Order.findByPk(req.params.id);
-    if (!order) return res.status(404).json({ error: "Facture non trouvée" });
-
-    res.json(order);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Erreur serveur" });
-  }
-});
-
-// Route PUT - Mettre à jour une facture par ID
-app.put("/api/billing/:id", async (req, res) => {
-  try {
-    const order = await Order.findByPk(req.params.id);
-    if (!order) return res.status(404).json({ error: "Facture non trouvée" });
-
-    await order.update(req.body);
-    res.json(order);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Erreur serveur" });
-  }
-});
-
-// Route DELETE - Supprimer une facture par ID
-app.delete("/api/billing/:id", async (req, res) => {
-  try {
-    const order = await Order.findByPk(req.params.id);
-    if (!order) return res.status(404).json({ error: "Facture non trouvée" });
-
-    await order.destroy();
-    res.json({ message: "Facture supprimée avec succès" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Erreur serveur" });
-  }
-});
+  console.error('Échec de connexion après 5 tentatives');
+}
+connectRabbitMQ();
 
 // POST - Créer une nouvelle facture
 app.post("/api/billing", async (req, res) => {
@@ -138,6 +111,8 @@ app.post("/api/billing", async (req, res) => {
     res.status(500).json({ error: "Erreur serveur" });
   }
 });
+
+// startRabbitMQ();
 
 // Démarrer le serveur
 app.listen(PORT, () => {

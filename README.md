@@ -142,8 +142,21 @@
 
 ## pm2
 1) pour démarrer billing(par exemple)
-- pm2 start server.js --name billing-app
-- pm2 save
-- pm2 startup
+```
+pm2 start server.js --name billing-app
+pm2 save
+pm2 startup
+```
+```
+pm2 start server.js --name api-gateway
+pm2 save
+pm2 startup
+```
 2) stopper
 - pm2 stop billing-app
+
+3) la liste
+- sudo rabbitmqctl list_queues
+
+4) démarrer la base de données pour voir si la liste est enregistrée
+- psql -U postgres -d orders -c "SELECT * FROM orders;"
