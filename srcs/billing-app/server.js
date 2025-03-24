@@ -74,6 +74,53 @@ app.get('/api/billing', async (req, res) => {
   }
 });
 
+
+// ****************************************************************************************************************
+
+// Route GET - Récupérer une facture par ID
+app.get('/api/billing/:id', async (req, res) => {
+  try {
+    const order = await Order.findByPk(req.params.id);
+    if (!order) return res.status(404).json({ error: "Facture non trouvée" });
+
+    res.json(order);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// Route PUT - Mettre à jour une facture par ID
+app.put('/api/billing/:id', async (req, res) => {
+  try {
+    const order = await Order.findByPk(req.params.id);
+    if (!order) return res.status(404).json({ error: "Facture non trouvée" });
+
+    await order.update(req.body);
+    res.json(order);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// Route DELETE - Supprimer une facture par ID
+app.delete('/api/billing/:id', async (req, res) => {
+  try {
+    const order = await Order.findByPk(req.params.id);
+    if (!order) return res.status(404).json({ error: "Facture non trouvée" });
+
+    await order.destroy();
+    res.json({ message: "Facture supprimée avec succès" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+
+// ****************************************************************************************************************
+
 // POST - Créer une nouvelle facture
 app.post('/api/billing', async (req, res) => {
   const { user_id, number_of_items, total_amount } = req.body;
