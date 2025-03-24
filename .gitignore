@@ -1,0 +1,45 @@
+# Fichiers et dossiers générés par Node.js
+node_modules/
+package-lock.json
+
+# Fichiers d'environnement sensibles
+.env
+.env.local
+.env.*.local
+
+# Fichiers Vagrant
+.vagrant/
+
+# Logs et fichiers temporaires
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+debug.log
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Fichiers de bases de données locales
+*.sqlite
+*.sqlite-journal
+
+# Fichiers de cache et temporaires
+*.swp
+*.swo
+*.bak
+*.tmp
+dist/
+build/
+.DS_Store
+
+# Fichiers spécifiques à l'IDE/éditeur
+.vscode/
+.idea/
+*.iml
+
+# PM2 Process Files
+.pm2/
+dump.pm2
