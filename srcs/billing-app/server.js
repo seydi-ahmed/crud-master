@@ -5,7 +5,7 @@ const amqp = require("amqplib");
 const { Sequelize, DataTypes } = require("sequelize");
 
 const app = express();
-const PORT = process.env.BILLING_PORT || 8081;
+const PORT = 8081;
 
 // À ajouter AVANT les routes
 app.use((req, res, next) => {

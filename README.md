@@ -161,3 +161,10 @@ pm2 startup
 - exporter le fchier JSON de postman avec toutes les requêtes
   - GET GATEWAY/BILLING/ID redirige vers la Billing API pour récupérer une commande spécifique.
 - psql -U postgres -d orders -c "SELECT * FROM orders;"
+
+## Configuration
+1) dans inventory et dans billing
+- sudo nano /etc/postgresql/12/main/pg_hba.conf
+- local   all             postgres                                peer (remplacé par md5)
+- sudo systemctl restart postgresql
+- vagrant destroy -f && vagrant up --provision

@@ -1,3 +1,5 @@
+# Vagrantfile
+
 Vagrant.configure("2") do |config|
     # Gateway VM
     config.vm.define "gateway-vm" do |gateway|
