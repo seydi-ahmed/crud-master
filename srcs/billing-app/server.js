@@ -1,33 +1,81 @@
 // crud-master/srcs/billing-app/server.js
 
-const express = require('express');
-const { Pool } = require('pg');
+const express = require("express");
+const { Pool } = require("pg");
+const amqp = require("amqplib");
 
 const app = express();
 app.use(express.json());
 
 // Configuration PostgreSQL
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'orders',
-  password: 'diouf',
+  user: "postgres",
+  host: "localhost",
+  database: "orders",
+  password: "diouf",
   port: 5432,
 });
 
-// Route pour recevoir les commandes
-app.post('/api/orders', async (req, res) => {
-  const { user_id, number_of_items, total_amount } = req.body;
+// Configuration RabbitMQ
+const RABBIT_CONFIG = {
+  url: "amqp://localhost",
+  queue: "billing_queue"
+};
+
+// Consumer RabbitMQ
+const startConsumer = async () => {
+  let conn, channel;
   
   try {
-    await pool.query(
-      'INSERT INTO orders(user_id, number_of_items, total_amount) VALUES($1, $2, $3)',
-      [user_id, number_of_items, total_amount]
-    );
-    res.json({ status: 'Order processed' });
+    conn = await amqp.connect(RABBIT_CONFIG.url);
+    channel = await conn.createChannel();
+    
+    await channel.assertQueue(RABBIT_CONFIG.queue, { durable: true });
+    channel.prefetch(1);
+
+    console.log("🔄 Billing worker ready. Waiting for messages...");
+
+    channel.consume(RABBIT_CONFIG.queue, async (msg) => {
+      if (!msg) return;
+
+      try {
+        const order = JSON.parse(msg.content.toString());
+        console.log("Processing order:", order.user_id);
+
+        await pool.query(
+          "INSERT INTO orders(user_id, number_of_items, total_amount, created_at) VALUES($1, $2, $3, $4)",
+          [order.user_id, order.number_of_items || 1, order.total_amount, order.timestamp || new Date()]
+        );
+
+        channel.ack(msg);
+        console.log(`✅ Order ${order.user_id} processed`);
+      } catch (err) {
+        console.error("❌ Processing failed:", err);
+        channel.nack(msg, false, true); // Réessayer plus tard
+      }
+    });
+
+    conn.on("close", () => {
+      console.log("RabbitMQ connection closed, reconnecting...");
+      setTimeout(startConsumer, 5000);
+    });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Consumer setup failed:", err);
+    if (channel) await channel.close();
+    if (conn) await conn.close();
+    setTimeout(startConsumer, 5000);
   }
+};
+
+// Démarrer le consumer
+startConsumer();
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({ status: "running" });
 });
 
-app.listen(7070, () => console.log('Billing service running on port 7070'));
+app.listen(7070, "0.0.0.0", () => {
+  console.log("💰 Billing service running on http://192.168.56.30:7070");
+});

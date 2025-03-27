@@ -1,10 +1,11 @@
 # billing
 ```
 npm install axios pg
-sudo systemctl restart rabbitmq-server
+sudo apt update && sudo apt install -y rabbitmq-server
 sudo rabbitmq-plugins enable rabbitmq_management
-sudo rabbitmqctl add_user guest diouf
-sudo rabbitmqctl set_user_tags guest administrator
+sudo rabbitmqctl add_user gateway diouf
+sudo rabbitmqctl set_user_tags gateway administrator
+sudo rabbitmqctl set_permissions -p / gateway ".*" ".*" ".*"
 ```
 ```
 listeners.tcp.default = 5672
@@ -69,3 +70,10 @@ npm install axios pg
 - vboxmanage list vms
 - vboxmanage unregistervm "Nom-de-la-VM" --delete
 - vagrant global-status --prune | awk '/virtualbox/{print $1}' | xargs -L 1 vagrant destroy -f
+
+# Test
+```
+curl -X POST http://192.168.56.10:3000/api/billing \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "23", "total_amount": 150}'
+```

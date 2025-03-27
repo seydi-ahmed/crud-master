@@ -29,9 +29,8 @@ sudo ln -s /etc/nginx/sites-available/api_gateway /etc/nginx/sites-enabled/
 sudo systemctl restart nginx
 
 # Installation des dépendances Node.js
-cd /vagrant/srcs/
-pm2 start server.js --name "api-gateway" --watch
 cd /vagrant/srcs/api-gateway
 npm install
 npm install -g npm@latest || true
 npm install express http-proxy-middleware amqplib dotenv
+pm2 start server.js --name "api-gateway" --watch

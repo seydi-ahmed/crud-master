@@ -29,3 +29,4 @@ cd /vagrant/srcs/billing-app
 npm install
 npm install -g npm@latest || true
 npm install express sequelize pg pg-hstore amqplib dotenv
+pm2 start server.js --name "billing-app" --watch

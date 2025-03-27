@@ -1,3 +1,5 @@
+// crud-master/srcs/inventory-app/server.js
+
 require("dotenv").config();
 const express = require("express");
 const app = express();
