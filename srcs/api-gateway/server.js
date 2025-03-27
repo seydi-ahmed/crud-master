@@ -1,55 +1,31 @@
 // crud-master/srcs/api-gateway/server.js
 
-const express = require("express");
-const amqp = require("amqplib"); // Ajoutez cette ligne
-const { createProxyMiddleware } = require("http-proxy-middleware");
+require('dotenv').config();
+const express = require('express');
+const axios = require('axios'); // Pour les appels HTTP entre services
 
 const app = express();
+app.use(express.json());
 
-
-// À ajouter AVANT les routes
-app.use((req, res, next) => {
-  const originalSend = res.send;
-  const originalStatus = res.status;
-  
-  res.status = function(code) {
-    // Transforme 201/202 en 200 (tout le reste inchangé)
-    return originalStatus.call(this, [201, 202].includes(code) ? 200 : code);
-  };
-  
-  next();
+// Route pour les films (proxy vers Inventory)
+app.use('/api/movies', (req, res) => {
+  axios({
+    method: req.method,
+    url: `http://192.168.56.20:8080${req.originalUrl}`,
+    data: req.body
+  })
+  .then(response => res.status(response.status).json(response.data))
+  .catch(error => res.status(500).json({ error: "Inventory Service Unavailable" }));
 });
 
-// Proxy pour Inventory API (HTTP)
-app.use(
-  "/api/movies",
-  createProxyMiddleware({
-    target: "http://192.168.56.20:8080",
-    changeOrigin: true,
-    pathRewrite: { "^/api/movies": "/api/movies" }
-  })
-);
-
-// Route RabbitMQ pour Billing
-app.post("/api/billing", express.json(), async (req, res) => {
+// Route simplifiée pour le billing (appel direct HTTP)
+app.post('/api/billing', async (req, res) => {
   try {
-    const conn = await amqp.connect("amqp://192.168.56.30:5672"); 
-    const channel = await conn.createChannel();
-    
-    await channel.assertQueue("billing_queue", { durable: false });
-    channel.sendToQueue("billing_queue", Buffer.from(JSON.stringify(req.body)));
-
-    console.log("📨 Message envoyé à RabbitMQ");
-    res.status(202).json({ status: "Message reçu par RabbitMQ" });
-
-    setTimeout(() => {
-      channel.close();
-      conn.close();
-    }, 500);
-  } catch (err) {
-    console.error("Erreur RabbitMQ:", err);
-    res.status(502).json({ error: "Service temporairement indisponible" });
+    const response = await axios.post('http://192.168.56.30:7070/api/orders', req.body);
+    res.json(response.data);
+  } catch (error) {
+    res.status(503).json({ error: "Billing Service Unavailable" });
   }
 });
 
-app.listen(3000, () => console.log("🚀 Gateway sur port 3000"));
+app.listen(3000, () => console.log('Gateway running on port 3000'));

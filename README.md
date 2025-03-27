@@ -1,170 +1,71 @@
-# CRUD-MASTER
-
-## Installation des outils nécessaires
-
-- ✅ VirtualBox
-- ✅ Vagrant
-- ✅ Node.js (avec Express, Sequelize et autres packages nécessaires)
-- ✅ PostgreSQL
-- ✅ RabbitMQ
-- ✅ Postman
-- ✅ PM2 (pour la gestion des processus Node.js)
-
-## Structure du projet
-
+# billing
 ```
-.
-├── README.md
-├── config.yaml
-├── .env
-├── scripts
-│   └── billing-setup.sh
-│   ├── gateway-setup.sh
-│   └── inventory-setup.sh
-├── srcs
-│   ├── api-gateway
-│   │   ├── package.json
-│   │   ├── server.js
-│   │   ├── rabbitmq-proxy.js
-│   ├── billing-app
-│   │   ├── app
-│   │   │   ├── config
-│   │   |   |   └── database.js
-│   │   │   ├── controllers
-│   │   |   |   └── orderController.js
-│   │   │   └── models
-│   │   |       └── orderRoute.js
-│   │   ├── package.json
-│   │   └── server.js
-│   └── inventory-app
-│       ├── app
-│       │   ├── config
-│       |   |   └── database.js
-│       │   ├── controllers
-│       |   |   └── movieController.js
-│       │   ├── models
-│       |   |   └── movieModel.js
-│       │   └── routes
-│       |   |   └── movieRoutes.js
-│       ├── package.json
-│       └── server.js
-└── Vagrantfile
-```
-
-## Role de chaque fichier/dossier:
-
-1. .env
-
-- contient les variable d'environnement nécessaires pour configurer les services (URL, identifiants des bases de données etc.)
-
-2. Vagrantfile
-
-- configure les 3 machines vituelles nécessaires pour le projet (gateway-vm, inventory-vm et billing-vm)
-
-3. scripts/
-
-- contient les scripts pour configurer chaque machine virtuelle
-  - gateway-setup.sh : Installe Node.js, l'API Gateway, et ses dépendances.
-  - inventory-setup.sh : Installe PostgreSQL, Node.js, et l'Inventory API.
-  - billing-setup.sh : Installe RabbitMQ, PostgreSQL, Node.js, et la Billing API.
-
-4. srcs/api-gateway/
-
-- c'est le point d'entrée de toutes les requêtes. il route les requêtes vers l'inventory API(HTTP) ou le billing API(RabbitMQ)
-- Fichiers:
-  - package.json : Dépendances Node.js (Express, http-proxy-middleware, amqplib).
-  - proxy.js : Configuration du proxy pour rediriger les requêtes.
-  - routes.js : Définition des routes.
-  - server.js : Point d'entrée de l'API Gateway.
-
-5. srcs/inventory-app/
-
-- gère les opérations CRUD sur les films. Elle utilise PostgreSQL pour stocker les données.
-- Fichiers:
-  - package.json : Dépendances Node.js (Express, Sequelize).
-  - app/models/ : Modèles Sequelize pour la base de données.
-  - app/controllers/ : Contrôleurs pour gérer les requêtes.
-  - app/routes/ : Définition des routes.
-  - server.js : Point d'entrée de l'API.
-
-6. srcs/billing-app/
-
-- traite les paiements via RabbitMQ. Elle stocke les commandes dans une base de données PostgreSQL.
-- Fichiers:
-  - package.json : Dépendances Node.js (Express, amqplib, Sequelize).
-  - app/models/ : Modèles Sequelize pour la base de données.
-  - app/controllers/ : Contrôleurs pour traiter les messages RabbitMQ.
-  - server.js : Point d'entrée de l'API.
-
-## Fonctionnement général du projet
-
-1. Tests avec Postman
-
-- Postman est utilisé pour tester les endpoints de l'API Gateway, de l'Inventory API et de la Billing API.
-- Exemple de test :
-  - POST /api/movies : Ajouter un film.
-  - GET /api/movies : Récupérer tous les films.
-  - POST /api/billing : Envoyer une commande de paiement.
-
-2. Gestion des VMs avec Vagrant
-
-- Commandes clés :
-  - vagrant up : Démarre les VMs.
-  - vagrant status : Affiche l'état des VMs.
-  - vagrant ssh <vm-name> : Se connecte à une VM.
-
-
-## Utilisation
-
-- ouvre 4 terminal
-- déplace toi dans la racine du projet
-- lance "vagrant up" sur un seul terminal et laisse charger
-- sur chacun des terminal tu ouvres une machine virtuelle
-    - gateway
-        - vagrant ssh gateway-vm
-        - cd /vagrant/srcs/api-gateway
-        - node server.js
-    - inventory
-        - vagrant ssh inventory-vm
-        - cd /vagrant/srcs/inventory-app
-        - node server.js
-    - billing
-        - vagrant ssh billing-vm
-        - cd /vagrant/srcs/billing-app
-        - node server.js
-
-
-## pm2
-1) pour démarrer billing(par exemple)
-```
-pm2 start server.js --name billing-app
-pm2 save
-pm2 startup
+npm install axios pg
+sudo systemctl restart rabbitmq-server
+sudo rabbitmq-plugins enable rabbitmq_management
+sudo rabbitmqctl add_user guest diouf
+sudo rabbitmqctl set_user_tags guest administrator
 ```
 ```
-pm2 start server.js --name api-gateway
-pm2 save
-pm2 startup
+listeners.tcp.default = 5672
+loopback_users = none
 ```
-2) stopper
-- pm2 stop billing-app
+```
+sudo nano /etc/rabbitmq/rabbitmq.conf
+mettez ceci:
+# Autorise toutes les connexions
+loopback_users = none
+# Force l'écoute sur toutes les interfaces
+listeners.tcp.default = 5672
+```
+```
+sudo systemctl restart rabbitmq-server
+```
+```
+# Création du fichier de configuration
+sudo tee /etc/rabbitmq/rabbitmq.conf <<EOF
+loopback_users = none
+listeners.tcp.default = 5672
+default_pass = diouf
+default_user = guest
+EOF
 
-3) la liste
-- sudo rabbitmqctl list_queues
+# Redémarrage du service
+sudo systemctl restart rabbitmq-server
 
-4) démarrer la base de données pour voir si la liste est enregistrée
+# Vérification
+sudo rabbitmqctl status | grep listeners
+# Doit afficher : listeners, port: 5672
+```
+```
+sudo tee /etc/rabbitmq/rabbitmq-env.conf <<EOF
+NODE_IP_ADDRESS=0.0.0.0
+NODE_PORT=5672
+EOF
+sudo systemctl restart rabbitmq-server
+```
 
-## Reste à faire
+# gateway
+```
+npm install
+npm install amqplib@0.10.3 http-proxy-middleware@2.0.6
+npm install axios pg
+```
 
-- cacher les credentials dans .env
-- renforcer les infos du fichier .env
-- exporter le fchier JSON de postman avec toutes les requêtes
-  - GET GATEWAY/BILLING/ID redirige vers la Billing API pour récupérer une commande spécifique.
-- psql -U postgres -d orders -c "SELECT * FROM orders;"
+# inventory
+```
+sudo ufw allow 8080/tcp
+ou
+sudo ufw disable
+```
 
-## Configuration
-1) dans inventory et dans billing
-- sudo nano /etc/postgresql/12/main/pg_hba.conf
-- local   all             postgres                                peer (remplacé par md5)
-- sudo systemctl restart postgresql
-- vagrant destroy -f && vagrant up --provision
+# sur toutes les machines
+```
+pkill node
+npm install axios pg
+```
+
+# virtualbox
+- vboxmanage list vms
+- vboxmanage unregistervm "Nom-de-la-VM" --delete
+- vagrant global-status --prune | awk '/virtualbox/{print $1}' | xargs -L 1 vagrant destroy -f
