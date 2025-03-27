@@ -3,6 +3,7 @@
 # Mise à jour du système
 sudo apt-get update -y
 sudo apt-get upgrade -y
+sudo apt install net-tools
 
 # Installation des dépendances communes
 sudo apt-get install -y \

@@ -16,6 +16,8 @@ CREATE TABLE movies (
 );"
 
 # Installation des dépendances Node.js
+cd /vagrant/srcs/
+pm2 start server.js --name "inventory-app" --watch
 cd /vagrant/srcs/inventory-app
 npm install
 npm install -g npm@latest || true
