@@ -1,6 +1,6 @@
 // crud-master/srcs/api-gateway/server.js
 
-requirrequire("dotenv").config();
+require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const amqp = require("amqplib");
@@ -41,6 +41,8 @@ connectRabbitMQ();
 
 // Route pour les films (proxy vers Inventory) - inchangée
 app.use("/api/movies", (req, res) => {
+  console.log(req.originalUrl);
+  
   axios({
     method: req.method,
     url: `http://192.168.56.20:8080${req.originalUrl}`,

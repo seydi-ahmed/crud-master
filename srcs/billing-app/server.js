@@ -18,14 +18,15 @@ const pool = new Pool({
 
 // Configuration RabbitMQ
 const RABBIT_CONFIG = {
-  url: "amqp://localhost",
+  url: "amqp://gateway:diouf@localhost", // Utilise l'utilisateur "gateway"
   queue: "billing_queue"
 };
+
 
 // Consumer RabbitMQ
 const startConsumer = async () => {
   let conn, channel;
-  
+
   try {
     conn = await amqp.connect(RABBIT_CONFIG.url);
     channel = await conn.createChannel();

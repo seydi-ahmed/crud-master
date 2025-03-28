@@ -1,13 +1,19 @@
 const Movie = require('../models/movie.model');
+const { Sequelize }= require('sequelize');
 
 exports.getAllMovies = async (req, res) => {
+  
   try {
     const { title } = req.query;
     const where = title ? { title: { [Sequelize.Op.like]: `%${title}%` } } : {};
+    console.log(where);
+    
     
     const movies = await Movie.findAll({ where });
     res.json(movies);
   } catch (err) {
+    console.log(err);
+    
     res.status(500).json({ error: err.message });
   }
 };

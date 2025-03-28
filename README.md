@@ -1,79 +1,33 @@
-# billing
-```
-npm install axios pg
-sudo apt update && sudo apt install -y rabbitmq-server
-sudo rabbitmq-plugins enable rabbitmq_management
-sudo rabbitmqctl add_user gateway diouf
-sudo rabbitmqctl set_user_tags gateway administrator
-sudo rabbitmqctl set_permissions -p / gateway ".*" ".*" ".*"
-```
-```
-listeners.tcp.default = 5672
-loopback_users = none
-```
-```
-sudo nano /etc/rabbitmq/rabbitmq.conf
-mettez ceci:
-# Autorise toutes les connexions
-loopback_users = none
-# Force l'écoute sur toutes les interfaces
-listeners.tcp.default = 5672
-```
-```
-sudo systemctl restart rabbitmq-server
-```
-```
-# Création du fichier de configuration
-sudo tee /etc/rabbitmq/rabbitmq.conf <<EOF
-loopback_users = none
-listeners.tcp.default = 5672
-default_pass = diouf
-default_user = guest
-EOF
+# crud-master
 
-# Redémarrage du service
-sudo systemctl restart rabbitmq-server
+## utilisation
+1) Ouvrir 3 terminals à la racine du projet
+2) Faire "vagrant up" sur le vscode ou un 4e terminal
+3) Ouvrir une machine virtuelle sur chacune des 3 terminal:
+- terminal 1(gateway):
+    - vagrant ssh gateway-vm
+    - cd /vagrant/srcs/api-gateway
+    - pm2 start server.js --name "api-gateway" --watch
+- terminal 2(inventory):
+    - vagrant ssh inventory-vm
+    - cd /vagrant/srcs/inventory-app
+    - pm2 start server.js --name "inventory-app" --watch
+- terminal 3(billing):
+    - vagrant ssh billing-vm
+    - cd /vagrant/srcs/billing-app
+    - pm2 start server.js --name "billing-app" --watch
 
-# Vérification
-sudo rabbitmqctl status | grep listeners
-# Doit afficher : listeners, port: 5672
-```
-```
-sudo tee /etc/rabbitmq/rabbitmq-env.conf <<EOF
-NODE_IP_ADDRESS=0.0.0.0
-NODE_PORT=5672
-EOF
-sudo systemctl restart rabbitmq-server
-```
+## développeur:
+1) Mouhamed Diouf
+- mail: seydiahmedelcheikh@gmail.com
+- git: mouhameddiouf
+2) Abdou Balde
+- mail: 
+- git: abdbalde
 
-# gateway
-```
-npm install
-npm install amqplib@0.10.3 http-proxy-middleware@2.0.6
-npm install axios pg
-```
 
-# inventory
-```
-sudo ufw allow 8080/tcp
-ou
-sudo ufw disable
-```
-
-# sur toutes les machines
-```
-pkill node
-npm install axios pg
-```
-
-# virtualbox
-- vboxmanage list vms
-- vboxmanage unregistervm "Nom-de-la-VM" --delete
-- vagrant global-status --prune | awk '/virtualbox/{print $1}' | xargs -L 1 vagrant destroy -f
-
-# Test
-```
-curl -X POST http://192.168.56.10:3000/api/billing \
-  -H "Content-Type: application/json" \
-  -d '{"user_id": "23", "total_amount": 150}'
-```
+- vérification de la BD
+- sudo -i -u postgres
+- puis psql
+- \c movies
+- table movies;
