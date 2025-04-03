@@ -27,7 +27,7 @@ const pool = new Pool({
 
 // Configuration RabbitMQ
 // const RABBIT_CONFIG = {
-//   url: "amqp://gateway:diouf@localhost", // Utilise l'utilisateur "gateway"
+//   url: "amqp://gateway:diouf@localhost",
 //   queue: "billing_queue"
 // };
 
