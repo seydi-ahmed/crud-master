@@ -9,11 +9,18 @@ const app = express();
 app.use(express.json());
 
 // Configuration RabbitMQ
+// const RABBIT_CONFIG = {
+//   url: "amqp://gateway:diouf@192.168.56.30",
+//   queue: "billing_queue",
+//   timeout: 5000
+// };
+
 const RABBIT_CONFIG = {
-  url: "amqp://gateway:diouf@192.168.56.30",
-  queue: "billing_queue",
+  url: process.env.BILLING_API_URL.replace("amqp://", `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@`),
+  queue: process.env.RABBITMQ_QUEUE,
   timeout: 5000
 };
+
 
 let channel;
 
@@ -43,9 +50,15 @@ connectRabbitMQ();
 app.use("/api/movies", (req, res) => {
   console.log(req.originalUrl);
   
+  // axios({
+  //   method: req.method,
+  //   url: `http://192.168.56.20:8080${req.originalUrl}`,
+  //   data: req.body,
+  // })
+
   axios({
     method: req.method,
-    url: `http://192.168.56.20:8080${req.originalUrl}`,
+    url: `${process.env.INVENTORY_API_URL}${req.originalUrl}`,
     data: req.body,
   })
     .then((response) => res.status(200).json(response.data))
@@ -85,6 +98,11 @@ app.post("/api/billing", async (req, res) => {
   }
 });
 
-app.listen(3000, "0.0.0.0", () => {
-  console.log("🚀 Gateway running on http://192.168.56.10:3000");
+// app.listen(3000, "0.0.0.0", () => {
+//   console.log("🚀 Gateway running on http://192.168.56.10:3000");
+// });
+
+const PORT = process.env.GATEWAY_PORT || 3000;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Gateway running on port ${PORT}`);
 });

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "23aa62b6-91fb-452b-8df4-04d7e641e443",
+		"_postman_id": "fd39db2a-8600-4849-a74b-b6b021dca092",
 		"name": "MovieStreaming",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "19858935"
@@ -9,8 +9,45 @@
 		{
 			"name": "Post Inventory/movies",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"Antman\",\n  \"description\": \"taille\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.56.20:8080/api/movies",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
 			},
 			"response": []
 		},
@@ -18,31 +55,45 @@
 			"name": "Get Inventory/movies",
 			"request": {
 				"method": "GET",
-				"header": []
-			},
-			"response": []
-		},
-		{
-			"name": "Put Inventory/movies/id",
-			"request": {
-				"method": "GET",
-				"header": []
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Inventory/movies/id",
-			"request": {
-				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://192.168.56.20:8080/api/movies",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"movies"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Delete Inventory/movies",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.56.20:8080/api/movies",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"movies"
+					]
+				}
 			},
 			"response": []
 		},
@@ -50,15 +101,143 @@
 			"name": "Get Inventory/movies/id",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Inventory/movies/id",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"A new movie put\",\n  \"description\": \"Very short description put\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.56.20:8080/api/movies/1",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"movies",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Inventory/movies/id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.56.20:8080/api/movies/1",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"movies",
+						"1"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Post Gateway/billing",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"user_id\": \"22\",\n  \"number_of_items\": \"10\",\n  \"total_amount\": \"50\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.56.10:3000/api/billing",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"10"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"billing"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Gateway/movies",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"A new movie\",\n  \"description\": \"Very short description\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.56.10:3000/api/movies",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"10"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"movies"
+					]
+				}
 			},
 			"response": []
 		},
@@ -66,15 +245,22 @@
 			"name": "Get Gateway/movies",
 			"request": {
 				"method": "GET",
-				"header": []
-			},
-			"response": []
-		},
-		{
-			"name": "Post Gateway/movies",
-			"request": {
-				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://192.168.56.10:3000/api/movies",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"10"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"movies"
+					]
+				}
 			},
 			"response": []
 		},
@@ -82,7 +268,29 @@
 			"name": "Get Inventory/movies/title",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://192.168.56.20:8080/api/movies/?title=Hulk",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"movies",
+						""
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "Hulk"
+						}
+					]
+				}
 			},
 			"response": []
 		}

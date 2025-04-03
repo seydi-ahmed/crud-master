@@ -63,8 +63,3 @@ cd /vagrant/srcs/api-gateway
 npm install
 npm install -g npm@latest || true
 npm install express sequelize pg pg-hstore dotenv
-
-# # Démarrer avec PM2 et forcer le restart si déjà lancé
-# pm2 delete "api-gateway" || true
-# pm2 start server.js --name "api-gateway" --watch
-# pm2 save

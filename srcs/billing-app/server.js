@@ -8,19 +8,35 @@ const app = express();
 app.use(express.json());
 
 // Configuration PostgreSQL
+// const pool = new Pool({
+//   user: "postgres",
+//   host: "localhost",
+//   database: "orders",
+//   password: "diouf",
+//   port: 5432,
+// });
+
 const pool = new Pool({
-  user: "postgres",
+  user: process.env.POSTGRES_USER,
   host: "localhost",
-  database: "orders",
-  password: "diouf",
+  database: process.env.POSTGRES_DB_ORDERS,
+  password: process.env.POSTGRES_PASSWORD,
   port: 5432,
 });
 
+
 // Configuration RabbitMQ
+// const RABBIT_CONFIG = {
+//   url: "amqp://gateway:diouf@localhost", // Utilise l'utilisateur "gateway"
+//   queue: "billing_queue"
+// };
+
+
 const RABBIT_CONFIG = {
-  url: "amqp://gateway:diouf@localhost", // Utilise l'utilisateur "gateway"
-  queue: "billing_queue"
+  url: process.env.BILLING_API_URL.replace("amqp://", `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@`),
+  queue: process.env.RABBITMQ_QUEUE
 };
+
 
 
 // Consumer RabbitMQ
@@ -77,6 +93,11 @@ app.get("/health", (req, res) => {
   res.json({ status: "running" });
 });
 
-app.listen(7070, "0.0.0.0", () => {
-  console.log("💰 Billing service running on http://192.168.56.30:7070");
+// app.listen(7070, "0.0.0.0", () => {
+//   console.log("💰 Billing service running on http://192.168.56.30:7070");
+// });
+
+const PORT = process.env.BILLING_PORT || 7070;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`💰 Billing service running on port ${PORT}`);
 });
