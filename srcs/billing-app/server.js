@@ -7,15 +7,6 @@ const amqp = require("amqplib");
 const app = express();
 app.use(express.json());
 
-// Configuration PostgreSQL
-// const pool = new Pool({
-//   user: "postgres",
-//   host: "localhost",
-//   database: "orders",
-//   password: "diouf",
-//   port: 5432,
-// });
-
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
   host: "localhost",
@@ -23,14 +14,6 @@ const pool = new Pool({
   password: process.env.POSTGRES_PASSWORD,
   port: 5432,
 });
-
-
-// Configuration RabbitMQ
-// const RABBIT_CONFIG = {
-//   url: "amqp://gateway:diouf@localhost",
-//   queue: "billing_queue"
-// };
-
 
 const RABBIT_CONFIG = {
   url: process.env.BILLING_API_URL.replace("amqp://", `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@`),

@@ -2,12 +2,6 @@
 
 const { Sequelize } = require('sequelize');
 
-// const sequelize = new Sequelize('movies', 'postgres', 'diouf', {
-//   host: 'localhost',
-//   dialect: 'postgres',
-//   port: 5432
-// });
-
 const sequelize = new Sequelize(process.env.POSTGRES_DB_MOVIES, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
   host: 'localhost',
   dialect: 'postgres',
