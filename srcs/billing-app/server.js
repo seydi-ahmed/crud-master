@@ -1,5 +1,7 @@
 // crud-master/srcs/billing-app/server.js
 
+require("dotenv").config();
+
 const express = require("express");
 const { Pool } = require("pg");
 const amqp = require("amqplib");
@@ -16,11 +18,10 @@ const pool = new Pool({
 });
 
 const RABBIT_CONFIG = {
-  url: process.env.BILLING_API_URL.replace("amqp://", `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@`),
+  url: `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@${process.env.BILLING_API_URL}`,
+  // url: `amqp://gateway:diouf@192.168.56.30`,
   queue: process.env.RABBITMQ_QUEUE
 };
-
-
 
 // Consumer RabbitMQ
 const startConsumer = async () => {
@@ -75,10 +76,6 @@ startConsumer();
 app.get("/health", (req, res) => {
   res.json({ status: "running" });
 });
-
-// app.listen(7070, "0.0.0.0", () => {
-//   console.log("💰 Billing service running on http://192.168.56.30:7070");
-// });
 
 const PORT = process.env.BILLING_PORT || 7070;
 app.listen(PORT, "0.0.0.0", () => {
