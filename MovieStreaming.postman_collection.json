@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "fd39db2a-8600-4849-a74b-b6b021dca092",
+		"_postman_id": "905b9af4-d1cd-4318-bc2f-7aa122e0182f",
 		"name": "MovieStreaming",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "19858935"
@@ -19,7 +19,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"title\": \"Antman\",\n  \"description\": \"taille\"\n}",
+					"raw": "{\n  \"title\": \"Film test\",\n  \"description\": \"Séries aussi\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -43,7 +43,7 @@
 					"query": [
 						{
 							"key": "",
-							"value": null,
+							"value": "",
 							"disabled": true
 						}
 					]
@@ -55,30 +55,13 @@
 			"name": "Get Inventory/movies",
 			"request": {
 				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://192.168.56.20:8080/api/movies",
-					"protocol": "http",
-					"host": [
-						"192",
-						"168",
-						"56",
-						"20"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"movies"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Inventory/movies",
-			"request": {
-				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "http://192.168.56.20:8080/api/movies",
 					"protocol": "http",
@@ -103,7 +86,50 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "http://192.168.56.20:8080/api/movies/4",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"movies",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Inventory/movies/title",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.56.20:8080/api/movies/?title=tes",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"movies",
+						""
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "tes"
+						}
+					]
 				}
 			},
 			"response": []
@@ -115,7 +141,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"title\": \"A new movie put\",\n  \"description\": \"Very short description put\"\n}",
+					"raw": "{\n  \"title\": \"Test Break modifié\",\n  \"description\": \"Fox River and Sona\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -136,6 +162,29 @@
 						"api",
 						"movies",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Inventory/movies",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.56.20:8080/api/movies",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"movies"
 					]
 				}
 			},
@@ -178,7 +227,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"user_id\": \"22\",\n  \"number_of_items\": \"10\",\n  \"total_amount\": \"50\"\n}",
+					"raw": "{\n  \"user_id\": \"31011\",\n  \"number_of_items\": \"41011\",\n  \"total_amount\": \"51011\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -216,7 +265,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"title\": \"A new movie\",\n  \"description\": \"Very short description\"\n}",
+					"raw": "{\n  \"title\": \"Even Prod\",\n  \"description\": \"Marodi Tv\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -265,20 +314,44 @@
 			"response": []
 		},
 		{
-			"name": "Get Inventory/movies/title",
+			"name": "Get Gateway/movies/id",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://192.168.56.20:8080/api/movies/?title=Hulk",
+					"raw": "http://192.168.56.10:3000/api/movies/3",
 					"protocol": "http",
 					"host": [
 						"192",
 						"168",
 						"56",
-						"20"
+						"10"
 					],
-					"port": "8080",
+					"port": "3000",
+					"path": [
+						"api",
+						"movies",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Gateway/movies/title",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.56.10:3000/api/movies/?title=tes",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"10"
+					],
+					"port": "3000",
 					"path": [
 						"api",
 						"movies",
@@ -287,8 +360,94 @@
 					"query": [
 						{
 							"key": "title",
-							"value": "Hulk"
+							"value": "tes"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Gateway/movies",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.56.10:3000/api/movies",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"10"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Gateway/movies/id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.56.10:3000/api/movies/3",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"10"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"movies",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Gateway/movies/id",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n        \"title\": \"Even Prod Put\",\n        \"description\": \"Marodi Tv Put\"\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.56.10:3000/api/movies/4",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"56",
+						"10"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"movies",
+						"4"
 					]
 				}
 			},

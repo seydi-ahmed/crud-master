@@ -12,7 +12,6 @@ app.use(express.json());
 // Configuration RabbitMQ
 const RABBIT_CONFIG = {
   url: `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@${process.env.BILLING_API_URL}`,
-  // url: `amqp://gateway:diouf@192.168.56.30`,
   queue: process.env.RABBITMQ_QUEUE,
   timeout: 5000,
 };
