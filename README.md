@@ -112,10 +112,11 @@ curl http://192.168.56.30:7070/health
 
 ## 👨‍💻 Développeurs
 
-| Nom | Email | GitHub |
-|-----|-------|--------|
-| **Mouhamed Diouf** | [seydiahmedelcheikh@gmail.com](mailto:seydiahmedelcheikh@gmail.com) | [mouhameddiouf](https://learn.zone01dakar.sn/git/mouhameddiouf) |
-| **Abdou Balde** | [abddou.balde@sn.01talent.com](mailto:abddou.balde@sn.01talent.com) | [abdbalde](https://learn.zone01dakar.sn/git/abdbalde) |
+- **Nom** : Mouhamed DIOUF
+- **GitHub** : [mouhameddiouf](https://github.com/seydi-ahmed)
+- **Email** : seydiahmedelcheikh@gmail.com
+- **Numéro** : +221776221681
+- **Réseaux** : [LinkedIn](https://linkedin.com/in/mouhamed-diouf-435207174)
 
 ---
 
