@@ -1,7 +1,7 @@
 # 📌 CRUD-Master
 
 ## Projet
-Le lien vers le projet est: [avec js](https://github.com/01-edu/public/tree/master/subjects/devops/crud-master)
+Le lien vers le projet est: [avec js](https://github.com/01-edu/public/tree/master/subjects/devops/crud-master) et [avec python](https://github.com/01-edu/public/tree/master/subjects/devops/crud-master-py)
 
 ## 📂 Description
 CRUD-Master est un projet de microservices qui gère les commandes et l'inventaire d'un service de streaming. Il repose sur un système d'API Gateway, un service d'inventaire et un service de facturation, orchestrés via RabbitMQ et gérés par PM2.
